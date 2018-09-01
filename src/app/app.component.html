@@ -1,36 +1,53 @@
 <form novalidate [formGroup]="user" (ngSubmit)="OnSubmit()">
   <label>
-    <span>Full name</span>
-    <input
+    <span>Full name </span>
+     <input
       type="text"
       name="name"
-      placeholder="Your full name" formControlName="name">
+      placeholder="Your full name" formControlName="name"><label [hidden]="!user.get('name').hasError('minlength')"> Min length 2</label> 
   </label>
+  <br>
+  <br>
+  <label>
+    <span>Country </span>
+     <select (change)="onSelectChange($event.target.value)" formControlName="country">
+        <option   *ngFor ="let country of countries" [value]="country.id">{{country.name}}</option>
+     </select>
+  </label>
+  <br>
+    <br>
   <div formGroupName="account">
     <label>
-      <span>Email address</span>
-      <input
+      <span>Email </span>
+       <input
         type="email"
         name="email"
-        placeholder="Your email address" formControlName="email">
+        placeholder="Your email address" formControlName="email"><label [hidden]="!user.get('account').get('email').hasError('required')">Email is required</label>
     </label>
+    <br>
+    <br>
     <label>
-      <span> address</span>
+      <span> address </span>
       <input
         type="text"
         name="address"
         placeholder="your address" formControlName="address" >
     </label>
+    <br>
+    <br>
   </div>
+  
   <div formArrayName ="items"  *ngFor ="let item of user.get('items').controls;let i = index;" >
     <div [formGroupName] ="i">
-        <input formControlName="id1" #id1 placeholder="Item name" (blur)="onblurid1(i,id1.value)">
-        <input formControlName="id2" #id2 placeholder="Item description" (blur)="onblurid2(i,id2.value)">
-        <input formControlName="result" placeholder="Item price">
-        <button type="button" (click)="AddRow()" >Add Row</button>
+        <input formControlName="id1" #id1 placeholder="Item name" (blur)="onblurid1(i,id1.value)"> &nbsp;
+        <input formControlName="id2" #id2 placeholder="Item description" (blur)="onblurid2(i,id2.value)">&nbsp; 
+        <input formControlName="result" placeholder="Item price">&nbsp;
+        <button type="button" (click)="AddRow()" >Add Row</button>&nbsp;
         <button type="button" (click)="DeleteRow(i)">Delete Row</button>
     </div>
   </div>
-  <button type="submit">Sign up</button>
+  <br>
+  <br>
+  <button  [disabled]="user.invalid" type="submit">Sign up</button>
 </form>
 {{user.value|json}}
