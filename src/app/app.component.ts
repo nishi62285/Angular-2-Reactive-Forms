@@ -1,5 +1,5 @@
 import { Component,OnInit } from '@angular/core';
-import {ReactiveFormsModule,FormGroup,FormBuilder,FormControl, FormArray} from '@angular/forms'
+import {ReactiveFormsModule,FormGroup,FormBuilder,FormControl, FormArray, Validators} from '@angular/forms'
 import {User} from './signup.interface'
 @Component({
   selector: 'app-root',
@@ -12,19 +12,23 @@ export class AppComponent implements OnInit{
 
   user : FormGroup ;
   userdata :User ;
+  countries =[{'id':0,'name':'select','selected':true},{'id':1, 'name':'India','selected':true}, {'id':2, 'name': 'USA','selected':true}, {'id':3, 'name': 'UK','selected':true}]
   ngOnInit(){
 
     this.user = new FormGroup({
-      name : new FormControl('Nishikant'),
-      account : new FormGroup({
-        email : new FormControl('abc@123.com'),
+      name : new FormControl('Nishikant',[Validators.required,Validators.minLength(2)]),
+      country : new FormControl(''),
+      account : new FormGroup({ 
+        email : new FormControl('abc@123.com',[Validators.email,Validators.required]),
         address : new FormControl('india')
       }),
       items : new FormArray([this.createItem()])
+      
     })
 
+    this.user.get('country').setValue(2)
     this.user.get('name').valueChanges.subscribe(x=>{
-debugger
+
 console.log(x)
 
     })
@@ -48,9 +52,12 @@ console.log(x)
   OnSubmit(){
     debugger
     this.userdata = this.user.value
-    console.log(this.user)
+    console.log(this.user.value)
   }
-
+  onSelectChange(country){
+    debugger
+    console.log(country)
+  }
   AddRow(){    
     let items = this.user.get('items') as FormArray;
    items.push(this.createItem())
